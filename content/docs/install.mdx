@@ -1,28 +1,42 @@
 ---
-title: Install & Configure
-description: Set up environment variables, install dependencies, and understand the stub settings.
+title: Installation & Configuration
+description: Install the SDK, configure environment variables, and toggle between stub and live modes.
 order: 2
 ---
 
 ```bash
-pnpm install
-cp .env.example .env.local
+npm i @arxpool/sdk
 ```
 
-## Required environment variables
+```ts
+import { configure } from "@arxpool/sdk";
 
-- `ARXPOOL_ATTESTER_SECRET` — used to sign collector results locally.
-- `USE_STUB` — set to `true` for deterministic demo results.
-- `NEXT_PUBLIC_BASE_URL` — ensures API calls resolve in hosted environments.
+configure({
+  useStub: true,
+  attesterSecret: process.env.ARXPOOL_ATTESTER_SECRET,
+});
+```
 
-## Optional variables
+## .env.example
 
-- `ARCIUM_API_KEY` and `ARXPOOL_MXE_ID` unlock real Arcium sessions.
+```
+USE_STUB=true
+ARXPOOL_ATTESTER_SECRET=local-dev
+ARCIUM_API_KEY=optional
+ARXPOOL_MXE_ID=optional
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
 
-## Scripts
+## Switching modes
 
-- `pnpm dev` launches Next.js with Contentlayer watch mode.
-- `pnpm build` runs `contentlayer build` before `next build` so docs ship with the site.
-- `pnpm lint` enforces the default Next.js ESLint rules.
+- `USE_STUB=true` keeps everything in deterministic demo mode (no Arcium connection).
+- `USE_STUB=false` prepares the collector for Arcium testnet once API keys and MXE IDs are issued.
 
-Remember to keep `.env.local` out of git history (already covered by `.gitignore`).
+## Run locally
+
+```bash
+npm run dev
+open http://localhost:3000
+```
+
+That's all you need to bootstrap the portal and start experimenting with encrypted pools.

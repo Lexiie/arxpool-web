@@ -1,0 +1,29 @@
+---
+title: Developer Guide
+description: Step-by-step helpers for creating pools, joining, computing, and verifying results.
+order: 5
+---
+
+```ts
+import {
+  createPool,
+  joinPool,
+  computePool,
+  verifyResult,
+} from "@arxpool/sdk";
+
+await createPool({ id: "poll-123", mode: "tally" });
+await joinPool("poll-123", {
+  ciphertext: "b64...",
+  senderPubkey: "BASE58...",
+});
+const res = await computePool("poll-123", { demoCounts: [4, 3, 2] });
+console.log(verifyResult(res)); // true
+```
+
+## Example use cases
+
+- Private DAO voting
+- Confidential DeFi analytics
+- Encrypted medical data collaboration
+- Federated AI model updates

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { encryptMessage } from "../../lib/crypto";
 import { verifyResult, type SignedResult } from "../../lib/sdk";
+import { Badge } from "../../components/ui/badge";
 
 interface ApiResponse<T> {
   ok: boolean;
@@ -87,8 +88,9 @@ export default function DemoPage() {
       if (!res.ok) {
         throw new Error(body.error || "Compute failed");
       }
-      setResult(body);
-      setStatus("Computation complete. Fetch result to verify.");
+      const valid = verifyResult(body);
+      setResult({ ...body, valid });
+      setStatus(valid ? "Computation complete. Signature verified." : "Computation done but signature mismatch.");
     } catch (err) {
       setStatus((err as Error).message);
     } finally {
@@ -129,6 +131,9 @@ export default function DemoPage() {
             Walk through the entire SDK flow locally. State lives on the client except for ciphertext, which only the API sees.
           </p>
         </header>
+        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 text-sm text-white/80">
+          <strong className="font-semibold text-white">Mode: Stub 🧪</strong> -- No live Arcium connection
+        </div>
         <div className="grid gap-8 md:grid-cols-2">
           <div className="space-y-6">
             <button
@@ -185,13 +190,23 @@ export default function DemoPage() {
             )}
             {result && (
               <div className="space-y-3 rounded-2xl border border-white/5 bg-white/5 p-4">
-                <p className="text-xs uppercase tracking-[0.3em] text-white/60">Latest result</p>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-xs uppercase tracking-[0.3em] text-white/60">Latest result</p>
+                  {typeof result.valid === "boolean" && (
+                    <Badge variant={result.valid ? "success" : "destructive"}>
+                      {result.valid ? "VALID ✅" : "INVALID ❌"}
+                    </Badge>
+                  )}
+                </div>
                 <ResultRow label="Tally" value={result.tally} />
                 <ResultRow label="Transcript" value={result.transcriptHash} />
                 <ResultRow label="Signature" value={result.signature} />
                 <ResultRow label="Verified" value={result.valid ? "true" : "false"} />
               </div>
             )}
+            <p className="text-xs text-white/50">
+              All results are generated in stub mode for demonstration purposes.
+            </p>
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@ Dark, neon-themed Next.js 14 portal that unifies the ArxPool landing page, MDX d
 - **Docs** sourced from MDX via Contentlayer.
 - **Demo** UI showing create → join → compute → verify loop.
 - **Collector API** implemented with in-memory persistence.
-- **Design system** powered by TailwindCSS, shadcn-style buttons, and Google Sans stack.
+- **Design system** powered by TailwindCSS, shadcn-style buttons, and Cabin Condensed stack.
 
 ## Getting started
 

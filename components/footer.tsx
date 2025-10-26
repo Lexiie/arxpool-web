@@ -1,17 +1,19 @@
 export function Footer() {
+  const year = new Date().getFullYear();
+
   return (
     <footer className="border-t border-white/5 bg-black/40">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-10 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
-        <p>© {new Date().getFullYear()} ArxPool. All rights reserved.</p>
-        <div className="flex gap-4">
-          <a href="/docs/security" className="hover:text-primary">
-            Security
+      <div className="mx-auto max-w-6xl px-6 py-10 text-center text-sm text-white/70">
+        <p>
+          © {year} ArxPool -- Built for Arcium Encrypted Side Track.
+        </p>
+        <div className="mt-3 flex flex-col items-center justify-center gap-2 text-xs text-white/60 sm:flex-row sm:gap-4">
+          <a href="https://github.com/Lexiie/arxpool-sdk" className="underline hover:text-primary">
+            SDK GitHub
           </a>
-          <a href="/docs/api" className="hover:text-primary">
-            API Reference
-          </a>
-          <a href="mailto:team@arxpool.dev" className="hover:text-primary">
-            Contact
+          <span className="hidden text-white/30 sm:inline">•</span>
+          <a href="https://github.com/Lexiie/arxpool-web" className="underline hover:text-primary">
+            Web Repo
           </a>
         </div>
       </div>

@@ -1,14 +1,34 @@
+import Link from "next/link";
 import { Shield, Cpu, BookOpen, Zap } from "lucide-react";
 import { Hero } from "../components/hero";
 import { Section } from "../components/section";
 import { FeatureCard } from "../components/feature-card";
 import { DemoPreview } from "../components/demo-preview";
 import { Diagram } from "../components/diagram";
+import { Button } from "../components/ui/button";
 
 export default function LandingPage() {
   return (
     <div className="space-y-10">
       <Hero />
+      <Section title="What is ArxPool">
+        <div className="space-y-4 text-lg text-white/80">
+          <p>
+            ArxPool is an open-source SDK that enables privacy-preserving data pooling on the Arcium network.
+            It allows developers to collect encrypted user data, perform secure computations inside Arcium's
+            Multi-party Execution Environment (MXE), and verify results on-chain -- without ever revealing
+            individual inputs.
+          </p>
+          <p className="mt-4">
+            Unlike the sample voting app from Arcium's example repo, ArxPool is designed as a reusable
+            developer toolkit. It can power voting, analytics, AI collaborations, and DeFi protocols
+            that require confidential data aggregation.
+          </p>
+          <Button asChild variant="secondary" className="mt-6 w-fit">
+            <Link href="/docs/install">Get Started with SDK →</Link>
+          </Button>
+        </div>
+      </Section>
       <Section
         eyebrow="Platform"
         title="Everything you need to test ArxPool"

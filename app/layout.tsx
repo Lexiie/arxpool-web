@@ -3,10 +3,36 @@ import "../styles/globals.css";
 import { Navbar } from "../components/navbar";
 import { Footer } from "../components/footer";
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://arxpool.dev";
+
 export const metadata: Metadata = {
   title: "ArxPool Web Portal",
   description:
-    "Dark, futuristic portal for developers to explore the ArxPool SDK, docs, and interactive demos."
+    "Dark, futuristic portal for developers to explore the ArxPool SDK, docs, and interactive demos.",
+  metadataBase: new URL(baseUrl),
+  icons: {
+    icon: "/favicon.svg"
+  },
+  openGraph: {
+    title: "ArxPool Web Portal",
+    description:
+      "Dark, futuristic portal for developers to explore the ArxPool SDK, docs, and interactive demos.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "ArxPool Portal Overview"
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ArxPool Web Portal",
+    description:
+      "Dark, futuristic portal for developers to explore the ArxPool SDK, docs, and interactive demos.",
+    images: ["/og-image.png"]
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

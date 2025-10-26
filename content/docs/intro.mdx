@@ -1,23 +1,16 @@
 ---
-title: Intro to ArxPool
-description: Understand the core concepts behind encrypted pools and how the demo portal works.
+title: ArxPool SDK Overview
+description: Learn how ArxPool layers on top of Arcium MXE to protect encrypted data pools.
 order: 1
 ---
 
-ArxPool powers secure Multiparty Computation (MPC) workflows where participants submit ciphertext and compute results without revealing plaintext inputs.
+ArxPool is a privacy-focused SDK built on top of Arcium's encrypted compute layer (MXE). It provides a composable way to collect, aggregate, and verify encrypted data so teams can experiment with secure coordination without exposing user inputs.
 
-## Conceptual flow
+## Key features
 
-1. A **pool** is created with attestation metadata and optional policy.
-2. Participants **join** by encrypting payloads with the SDK and submitting ciphertext to the collector API.
-3. The backend calls `computePool()` to aggregate encrypted inputs.
-4. Clients fetch `/api/result` and run `verifyResult()` to validate signatures.
+- **End-to-end encryption** -- ciphertext never leaves the secure path, so plaintext leakage is impossible.
+- **Verifiable compute** -- Arcium MXE issues attestations that the SDK can verify client-side.
+- **Stub + live parity** -- run in offline stub mode today and switch to Arcium testnet once keys are ready.
+- **Developer-first APIs** -- modern TypeScript surface area with helpers for pools, joins, compute, and verification.
 
-## Why this portal matters
-
-- **Landing** explains the value proposition for decision makers and builders.
-- **Docs** live in MDX so they stay close to the codebase.
-- **Demo** provides an interactive playground wired to the stub collector.
-- **Collector** API routes mirror production shapes, making migrations seamless.
-
-Keep this repo handy as your reference implementation before moving to a real Arcium attester.
+Keep this page handy as the mental model for how landing, docs, demo, and collector fit together inside ArxPool.

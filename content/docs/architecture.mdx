@@ -1,25 +1,24 @@
 ---
-title: Architecture
-description: How the app router, docs source, demo UI, and collector communicate.
-order: 5
+title: System Architecture
+description: Trace how the SDK, collector API, and Arcium MXE coordinate end to end.
+order: 3
 ---
 
-## Layers
+```
+User → ArxPool SDK (frontend)
+     → Collector API (backend)
+     → Arcium MXE (compute layer)
+     → Job Receipt / Attestation
+     → verifyResult() (client)
+```
 
-- **App Router** — Landing, docs, demo, and API routes share the same Next.js tree.
-- **Contentlayer** — Builds MDX into typed objects consumed at request time.
-- **UI Library** — Tailwind + shadcn components provide neon-styled cards, buttons, and sections.
-- **Collector Libs** — `/lib/db.ts`, `/lib/sdk.ts`, and `/lib/crypto.ts` encapsulate persistence, SDK access, and deterministic encryption stubs.
+## Components
 
-## Request lifecycle
+- **Client SDK** -- handles encryption, submission, and verification helpers.
+- **Collector API** -- receives ciphertext, triggers computation, and exposes signed receipts.
+- **Arcium MXE** -- executes secure multiparty computation once the project goes live.
+- **Verifier** -- validates attestations plus `job_commit` hashes before acting on results.
 
-1. Client calls `/api/pool/create` to mint a pool. Response contains attestation metadata.
-2. Participants encrypt payloads via `useDemoClient()` helper in the demo page and POST to `/api/join`.
-3. Once thresholds are met, `/api/pool/compute` runs `computePool()` and emits a signed result.
-4. `/api/result` exposes the signed blob for downstream verification.
+## Why it matters
 
-## Scaling notes
-
-- Swap the in-memory DB for Redis or Dynamo when persistence is needed.
-- Replace `cryptoStub()` with the actual Arcium primitives when moving beyond demos.
-- Add background workers for long-running compute tasks if your pools exceed synchronous limits.
+ArxPool abstracts complex encrypted compute into simple functions. Builders can remix the toolkit for private voting, analytics, AI collaborations, or DeFi protocols that require confidential aggregation -- all without reimplementing the cryptography stack.
