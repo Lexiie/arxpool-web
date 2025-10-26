@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@arxpool/sdk": "github:arxpool-hq/sdk",
+    "@arxpool/sdk": "git+https://github.com/arxpool-hq/sdk.git",
     "@contentlayer/source-files": "0.3.4",
     "@radix-ui/react-slot": "1.0.4",
     "clsx": "2.1.1",
