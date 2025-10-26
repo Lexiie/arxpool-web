@@ -15,12 +15,12 @@ export default function LandingPage() {
         <div className="space-y-4 text-lg text-white/80">
           <p>
             ArxPool is an open-source SDK that enables privacy-preserving data pooling on the Arcium network.
-            It allows developers to collect encrypted user data, perform secure computations inside Arcium's
+            It allows developers to collect encrypted user data, perform secure computations inside Arcium&apos;s
             Multi-party Execution Environment (MXE), and verify results on-chain -- without ever revealing
             individual inputs.
           </p>
           <p className="mt-4">
-            Unlike the sample voting app from Arcium's example repo, ArxPool is designed as a reusable
+            Unlike the sample voting app from Arcium&apos;s example repo, ArxPool is designed as a reusable
             developer toolkit. It can power voting, analytics, AI collaborations, and DeFi protocols
             that require confidential data aggregation.
           </p>
