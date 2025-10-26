@@ -20,9 +20,8 @@ export default function LandingPage() {
             individual inputs.
           </p>
           <p className="mt-4">
-            Unlike the sample voting app from Arcium&apos;s example repo, ArxPool is designed as a reusable
-            developer toolkit. It can power voting, analytics, AI collaborations, and DeFi protocols
-            that require confidential data aggregation.
+            ArxPool is designed as a reusable developer toolkit. It can power voting, analytics, AI collaborations,
+            and DeFi protocols that require confidential data aggregation.
           </p>
           <Button asChild variant="secondary" className="mt-6 w-fit">
             <Link href="/docs/install">Get Started with SDK →</Link>
