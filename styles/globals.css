@@ -7,7 +7,7 @@
 }
 
 body {
-  font-family: "Google Sans", Inter, sans-serif;
+  font-family: "Google Sans Code", "Google Sans", Inter, sans-serif;
   background: radial-gradient(circle at top, rgba(108, 99, 255, 0.2), transparent 45%),
     #0A0A0F;
   color: #EAEAEA;

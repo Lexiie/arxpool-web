@@ -19,7 +19,7 @@ const config: Config = {
         muted: "#1A1A24"
       },
       fontFamily: {
-        sans: ['"Google Sans"', "Inter", "sans-serif"]
+        sans: ['"Google Sans Code"', '"Google Sans"', "Inter", "sans-serif"]
       },
       borderRadius: {
         xl: "1rem",
