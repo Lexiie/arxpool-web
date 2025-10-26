@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  font-family: "Cabin Condensed", sans-serif;
+  font-family: var(--font-sans), "Cabin Condensed", sans-serif;
   background: radial-gradient(circle at top, rgba(108, 99, 255, 0.2), transparent 45%),
     #0A0A0F;
   color: #EAEAEA;
