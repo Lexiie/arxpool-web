@@ -1,0 +1,48 @@
+---
+title: API Reference
+description: REST endpoints that back the collector stub and how to interact with them.
+order: 3
+---
+
+## POST /api/pool/create
+
+Creates a pool with a generated ID and attester metadata.
+
+Request body:
+
+```json
+{
+  "name": "Governance Test",
+  "policy": {
+    "maxParticipants": 64
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "poolId": "pool_123",
+  "attestation": {
+    "issuer": "arxpool-local",
+    "timestamp": 1710000000
+  }
+}
+```
+
+## POST /api/join
+
+Accepts SDK-encrypted payloads.
+
+- Validates `poolId` existence.
+- Persists ciphertext in memory only.
+- Never logs plaintext or ciphertext.
+
+## POST /api/pool/compute
+
+Calls `computePool()` from `lib/sdk.ts`. When `USE_STUB=true`, deterministic results are returned so the UI can show an end-to-end success message.
+
+## GET /api/result?poolId=pool_123
+
+Returns the latest signed result plus metadata. Clients should still run `verifyResult()` from the SDK to be sure.

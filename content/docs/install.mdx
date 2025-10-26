@@ -1,0 +1,28 @@
+---
+title: Install & Configure
+description: Set up environment variables, install dependencies, and understand the stub settings.
+order: 2
+---
+
+```bash
+pnpm install
+cp .env.example .env.local
+```
+
+## Required environment variables
+
+- `ARXPOOL_ATTESTER_SECRET` — used to sign collector results locally.
+- `USE_STUB` — set to `true` for deterministic demo results.
+- `NEXT_PUBLIC_BASE_URL` — ensures API calls resolve in hosted environments.
+
+## Optional variables
+
+- `ARCIUM_API_KEY` and `ARXPOOL_MXE_ID` unlock real Arcium sessions.
+
+## Scripts
+
+- `pnpm dev` launches Next.js with Contentlayer watch mode.
+- `pnpm build` runs `contentlayer build` before `next build` so docs ship with the site.
+- `pnpm lint` enforces the default Next.js ESLint rules.
+
+Remember to keep `.env.local` out of git history (already covered by `.gitignore`).

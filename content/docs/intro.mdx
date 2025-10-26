@@ -1,0 +1,23 @@
+---
+title: Intro to ArxPool
+description: Understand the core concepts behind encrypted pools and how the demo portal works.
+order: 1
+---
+
+ArxPool powers secure Multiparty Computation (MPC) workflows where participants submit ciphertext and compute results without revealing plaintext inputs.
+
+## Conceptual flow
+
+1. A **pool** is created with attestation metadata and optional policy.
+2. Participants **join** by encrypting payloads with the SDK and submitting ciphertext to the collector API.
+3. The backend calls `computePool()` to aggregate encrypted inputs.
+4. Clients fetch `/api/result` and run `verifyResult()` to validate signatures.
+
+## Why this portal matters
+
+- **Landing** explains the value proposition for decision makers and builders.
+- **Docs** live in MDX so they stay close to the codebase.
+- **Demo** provides an interactive playground wired to the stub collector.
+- **Collector** API routes mirror production shapes, making migrations seamless.
+
+Keep this repo handy as your reference implementation before moving to a real Arcium attester.

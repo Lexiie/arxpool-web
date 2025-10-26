@@ -1,0 +1,25 @@
+---
+title: Security Principles
+description: Guardrails that keep the demo aligned with production-ready expectations.
+order: 4
+---
+
+## 1. No plaintext logging
+
+Console statements scrub payloads. Visibility comes from metadata, not sensitive input.
+
+## 2. Ephemeral storage
+
+`lib/db.ts` stores pools in-process only. Restarting the server wipes state, mimicking the stateless collector contract.
+
+## 3. Deterministic verification
+
+`verifyResult()` is pure and uses only the payload returned by the API. This makes it portable for CI or client testing.
+
+## 4. Strict typing
+
+TypeScript runs in `strict` mode, forcing you to handle edge cases explicitly.
+
+## 5. HTTPS + Vercel
+
+Deployments inherit Vercel certificates, so browsers negotiate TLS automatically.

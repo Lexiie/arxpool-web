@@ -1,0 +1,25 @@
+---
+title: Architecture
+description: How the app router, docs source, demo UI, and collector communicate.
+order: 5
+---
+
+## Layers
+
+- **App Router** — Landing, docs, demo, and API routes share the same Next.js tree.
+- **Contentlayer** — Builds MDX into typed objects consumed at request time.
+- **UI Library** — Tailwind + shadcn components provide neon-styled cards, buttons, and sections.
+- **Collector Libs** — `/lib/db.ts`, `/lib/sdk.ts`, and `/lib/crypto.ts` encapsulate persistence, SDK access, and deterministic encryption stubs.
+
+## Request lifecycle
+
+1. Client calls `/api/pool/create` to mint a pool. Response contains attestation metadata.
+2. Participants encrypt payloads via `useDemoClient()` helper in the demo page and POST to `/api/join`.
+3. Once thresholds are met, `/api/pool/compute` runs `computePool()` and emits a signed result.
+4. `/api/result` exposes the signed blob for downstream verification.
+
+## Scaling notes
+
+- Swap the in-memory DB for Redis or Dynamo when persistence is needed.
+- Replace `cryptoStub()` with the actual Arcium primitives when moving beyond demos.
+- Add background workers for long-running compute tasks if your pools exceed synchronous limits.
