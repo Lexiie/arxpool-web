@@ -1,16 +1,15 @@
 ---
-title: Security Principles
-description: Guardrails that keep ArxPool aligned with production-ready expectations.
+title: Security & Guardrails
+description: Principles that keep the demo aligned with production expectations.
 order: 4
 ---
 
-| Rule | Description |
+| Rule | Why it matters |
 | --- | --- |
-| No plaintext | SDK never decrypts user data; ciphertext stays opaque end to end. |
-| Secrets in env | `ARXPOOL_ATTESTER_SECRET` and `ARCIUM_API_KEY` live in environment variables only. |
-| Deterministic signatures | Uses Ed25519 plus canonical JSON before signing so results are reproducible. |
-| Pure verification | `verifyResult()` runs offline with no network fetches required. |
-| Redacted logs | Console output replaces payloads with `[ENCRYPTED_PAYLOAD]` markers. |
-| HTTPS only | All communications flow through TLS (e.g., Vercel-managed SSL). |
+| No plaintext persistence | Ciphertext is redacted to `[ENCRYPTED_PAYLOAD]` before it touches the in-memory store. |
+| Secrets live in env | `ARXPOOL_ATTESTER_SECRET` and `ARXPOOL_ATTESTER_KEY` never ship to the client bundle. |
+| Deterministic signatures | Stub mode simulates Ed25519 verification so `verifyResult()` can run offline. |
+| Redacted logs | Server handlers never log request bodies that might contain ciphertext. |
+| HTTPS only | Deploy on Vercel (or similar) so TLS is mandatory end to end. |
 
-Security is a first-class citizen in ArxPool's architecture.
+These guardrails let you prototype safely while matching the constraints of the live collector.

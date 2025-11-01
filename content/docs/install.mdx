@@ -1,6 +1,6 @@
 ---
-title: Installation & Configuration
-description: Install the SDK, configure environment variables, and toggle between stub and live modes.
+title: Install & Configure
+description: Install the SDK, wire environment variables, and switch between stub and testnet modes.
 order: 2
 ---
 
@@ -12,31 +12,38 @@ npm i @arxpool-hq/sdk
 import { configure } from "@arxpool-hq/sdk";
 
 configure({
-  useStub: true,
+  mode: process.env.USE_STUB === "true" ? "stub" : "testnet",
+  node: process.env.ARXPOOL_NODE,
+  attesterKey: process.env.ARXPOOL_ATTESTER_KEY,
   attesterSecret: process.env.ARXPOOL_ATTESTER_SECRET,
 });
 ```
 
-## .env.example
+### .env.example
 
 ```
 USE_STUB=true
 ARXPOOL_ATTESTER_SECRET=local-dev
-ARCIUM_API_KEY=optional
-ARXPOOL_MXE_ID=optional
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+# testnet
+# USE_STUB=false
+ARXPOOL_NODE=https://testnet.arx.arcium.com
+ARXPOOL_ATTESTER_KEY=ed25519:your_private_key_here
+
+NEXT_PUBLIC_SITE_URL=https://arxpool-web.vercel.app
+NEXT_PUBLIC_USE_STUB=true
 ```
 
-## Switching modes
+### Mode switch
 
-- `USE_STUB=true` keeps everything in deterministic demo mode (no Arcium connection).
-- `USE_STUB=false` prepares the collector for Arcium testnet once API keys and MXE IDs are issued.
+- Keep `USE_STUB=true` for deterministic local demos.
+- Flip to `USE_STUB=false`, set `ARXPOOL_NODE`, and provide `ARXPOOL_ATTESTER_KEY` for testnet.
+- `NEXT_PUBLIC_USE_STUB` mirrors the backend flag so the UI badge stays honest.
 
-## Run locally
+### Run locally
 
 ```bash
 npm run dev
-open http://localhost:3000
 ```
 
-That's all you need to bootstrap the portal and start experimenting with encrypted pools.
+Visit `http://localhost:3000` and try the `/demo` flow.

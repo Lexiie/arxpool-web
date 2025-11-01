@@ -1,21 +1,44 @@
 import { NextResponse } from "next/server";
-import { appendCiphertext, getPool } from "../../../lib/db";
+import { maskedCiphertext, joinCollectorPool } from "../../../lib/sdk";
+import { appendBlob, getPool } from "../../../lib/store";
+
+interface JoinPayload {
+  poolId: string;
+  ciphertext: string;
+  senderPubkey?: string;
+}
 
 export async function POST(request: Request) {
-  const body = await request.json().catch(() => null);
-  if (!body?.poolId || !body?.ciphertext) {
-    return NextResponse.json({ error: "poolId and ciphertext required" }, { status: 400 });
+  let payload: JoinPayload;
+  try {
+    payload = await request.json();
+  } catch (error) {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const pool = getPool(body.poolId);
+  const { poolId, ciphertext, senderPubkey } = payload;
+  if (!poolId || !ciphertext) {
+    return NextResponse.json({ error: "poolId and ciphertext are required" }, { status: 400 });
+  }
+
+  const pool = getPool(poolId);
   if (!pool) {
     return NextResponse.json({ error: "Pool not found" }, { status: 404 });
   }
 
   try {
-    appendCiphertext(pool.id, String(body.ciphertext));
-    return NextResponse.json({ ok: true, ciphertextCount: pool.ciphertexts.length });
+    await joinCollectorPool(poolId, {
+      ciphertext: String(ciphertext),
+      senderPubkey: senderPubkey?.trim() || "anon"
+    });
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }
+
+  appendBlob(poolId, {
+    ciphertext: maskedCiphertext(),
+    senderPubkey: senderPubkey?.trim() || "anon"
+  });
+
+  return NextResponse.json({ ok: true, count: pool.blobs.length });
 }

@@ -9,61 +9,91 @@ import { Button } from "../components/ui/button";
 
 export default function LandingPage() {
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
       <Hero />
-      <Section title="What is ArxPool">
-        <div className="space-y-4 text-lg text-white/80">
-          <p>
-            ArxPool is an open-source SDK that enables privacy-preserving data pooling on the Arcium network.
-            It allows developers to collect encrypted user data, perform secure computations inside Arcium&apos;s
-            Multi-party Execution Environment (MXE), and verify results on-chain -- without ever revealing
-            individual inputs.
-          </p>
-          <p className="mt-4">
-            ArxPool is designed as a reusable developer toolkit. It can power voting, analytics, AI collaborations,
-            and DeFi protocols that require confidential data aggregation.
-          </p>
-          <Button asChild variant="secondary" className="mt-6 w-fit">
-            <Link href="/docs/install">Get Started with SDK →</Link>
-          </Button>
-        </div>
-      </Section>
-      <Section
-        eyebrow="Platform"
-        title="Everything you need to test ArxPool"
-        description="Landing, docs, demo, and collector run under one Next.js app router."
-      >
+      <Section title="What is ArxPool" description="Encrypted coordination toolkit running on top of Arcium's MPC infrastructure.">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <FeatureCard
             title="Encrypted pools"
-            description="Spin up voting and pooling flows with attested ciphertext transport."
+            description="Collect commitments without plaintext leakage."
             icon={<Shield size={20} />}
           />
           <FeatureCard
             title="SDK-first"
-            description="ArxPool SDK drives collector compute and client verification."
+            description="configure() once, then call create → join → compute → verify."
             icon={<Cpu size={20} />}
           />
           <FeatureCard
             title="Docs in MDX"
-            description="Five MDX guides cover intro, install, API, security, architecture."
+            description="Intro, install, developer guide, architecture, security."
             icon={<BookOpen size={20} />}
           />
           <FeatureCard
-            title="Framer Motion"
-            description="Dark, neon UI with subtle glassmorphism and motion cues."
+            title="Demo ready"
+            description="Interactive flow mirrors the collector API."
             icon={<Zap size={20} />}
           />
         </div>
       </Section>
       <Section
-        eyebrow="Collector"
-        title="Demo-ready backend"
-        description="Server routes mirror the production collector contract with stubbed SDK compute for local tries."
+        title="How it works"
+        description="Create a pool, append encrypted choices, compute via the SDK, verify signatures in the browser."
+      >
+        <div className="grid gap-6 md:grid-cols-3">
+          {["Create", "Join", "Compute + Verify"].map((step, index) => (
+            <div key={step} className="rounded-2xl border border-white/10 bg-black/40 p-6">
+              <p className="text-xs uppercase tracking-[0.3em] text-white/50">Step {index + 1}</p>
+              <h3 className="mt-3 text-xl font-semibold">{step}</h3>
+              <p className="mt-2 text-sm text-white/70">
+                {index === 0 && "POST /api/pool/create seeds an in-memory collector with title and options."}
+                {index === 1 && "Participants encrypt their choice client-side and call /api/join (ciphertext is redacted)."}
+                {index === 2 && "computePool() runs in stub or testnet mode; verifyResult() lights up the VALID badge."}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-8 rounded-2xl border border-primary/30 bg-primary/10 p-6 text-sm text-white/80">
+          <p className="font-semibold text-white">Ready to build?</p>
+          <p className="mt-2">
+            The SDK wrapper detects USE_STUB from your environment. Flip it to testnet once your ARXPOOL_NODE and attester key are configured—no code changes required.
+          </p>
+          <Button asChild variant="secondary" className="mt-4">
+            <Link href="/docs/developer-guide">Explore developer guide →</Link>
+          </Button>
+        </div>
+      </Section>
+      <Diagram />
+      <Section
+        title="Why now"
+        description="Arcium's testnet unlocks verifiable multiparty computation for real builders."
+      >
+        <ul className="grid gap-6 text-sm text-white/80 md:grid-cols-3">
+          <li className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 className="text-lg font-semibold text-white">Testnet parity</h3>
+            <p className="mt-2">
+              Stub mode mimics the collector contract so you can integrate today and swap endpoints later.
+            </p>
+          </li>
+          <li className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 className="text-lg font-semibold text-white">Verified results</h3>
+            <p className="mt-2">
+              verifyResult() uses deterministic signatures so badge VALID shows up instantly in the demo.
+            </p>
+          </li>
+          <li className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 className="text-lg font-semibold text-white">Open source flow</h3>
+            <p className="mt-2">
+              Fork the repo, deploy to Vercel, and share a single portal with landing, docs, demo, and API.
+            </p>
+          </li>
+        </ul>
+      </Section>
+      <Section
+        title="Demo & collector"
+        description="Interactive playground plus the API endpoints you need to wire the SDK."
       >
         <DemoPreview />
       </Section>
-      <Diagram />
     </div>
   );
 }

@@ -1,29 +1,49 @@
 ---
 title: Developer Guide
-description: Step-by-step helpers for creating pools, joining, computing, and verifying results.
+description: End-to-end flow for create → join → compute → verify using the ArxPool SDK.
 order: 5
 ---
 
 ```ts
 import {
+  configure,
   createPool,
   joinPool,
   computePool,
   verifyResult,
 } from "@arxpool-hq/sdk";
 
-await createPool({ id: "poll-123", mode: "tally" });
-await joinPool("poll-123", {
-  ciphertext: "b64...",
-  senderPubkey: "BASE58...",
+configure({
+  mode: process.env.USE_STUB === "true" ? "stub" : "testnet",
+  node: process.env.ARXPOOL_NODE,
+  attesterKey: process.env.ARXPOOL_ATTESTER_KEY,
+  attesterSecret: process.env.ARXPOOL_ATTESTER_SECRET,
 });
-const res = await computePool("poll-123", { demoCounts: [4, 3, 2] });
-console.log(verifyResult(res)); // true
+
+// 1. Create a pool (server-side)
+await createPool({
+  id: "vote-2025",
+  mode: "tally",
+  description: "Arcium Launch Vote",
+  metadata: { options: ["Yes", "No", "Abstain"] },
+});
+
+// 2. Join the pool (ciphertext only)
+await joinPool("vote-2025", {
+  ciphertext: "nonce:BASE64_PAYLOAD",
+  senderPubkey: "anon-pubkey",
+});
+
+// 3. Compute (server-side)
+const result = await computePool("vote-2025");
+
+// 4. Verify (client-side)
+const isValid = verifyResult(result);
+console.log({
+  isValid,
+  participants: (result.payload as any)?.participant_count,
+  signer: result.signer_pubkey,
+});
 ```
 
-## Example use cases
-
-- Private DAO voting
-- Confidential DeFi analytics
-- Encrypted medical data collaboration
-- Federated AI model updates
+Ship this flow as-is in stub mode, then point the collector to Arcium testnet to exercise live attestations.

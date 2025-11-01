@@ -1,57 +1,117 @@
-const verifierSalt = "arxpool-demo-stub";
+import {
+  configure,
+  getConfig,
+  createPool as sdkCreatePool,
+  joinPool as sdkJoinPool,
+  computePool as sdkComputePool,
+  verifyResult as sdkVerifyResult
+} from "@arxpool-hq/sdk";
+import type {
+  ComputeOptions,
+  EncryptedBlob,
+  Pool,
+  SignedResult
+} from "@arxpool-hq/sdk";
 
-export interface SignedResult {
-  poolId: string;
-  tally: number;
-  transcriptHash: string;
-  signature: string;
-  issuedAt: number;
-  attester: string;
+let configured = false;
+
+function envBool(value: string | undefined, fallback: boolean) {
+  if (value === undefined) return fallback;
+  return value === "true";
 }
 
-interface ComputePayload {
-  poolId: string;
-  ciphertexts: string[];
-}
-
-const useStub = process.env.USE_STUB !== "false";
-
-export async function computePool(payload: ComputePayload): Promise<SignedResult> {
-  if (!payload.ciphertexts.length) {
-    throw new Error("No ciphertexts present");
+export function initSDK(): "stub" | "testnet" {
+  if (configured) {
+    return getConfig().mode;
   }
 
-  if (useStub) {
-    return stubCompute(payload);
+  const mode = envBool(process.env.USE_STUB, true) ? "stub" : "testnet";
+  const node = process.env.ARXPOOL_NODE;
+  const attesterSecret = process.env.ARXPOOL_ATTESTER_SECRET;
+  const attesterKey = process.env.ARXPOOL_ATTESTER_KEY;
+
+  const configureOptions: Partial<{
+    mode: "stub" | "testnet";
+    node: string;
+    attesterSecret?: string;
+    attesterKey?: string;
+  }> = { mode };
+
+  if (node) {
+    configureOptions.node = node;
   }
 
-  // Placeholder for real SDK invocation.
-  return stubCompute(payload);
+  if (attesterSecret) {
+    configureOptions.attesterSecret = attesterSecret;
+  }
+
+  if (attesterKey) {
+    configureOptions.attesterKey = attesterKey;
+  }
+
+  const config = configure(configureOptions);
+  configured = true;
+  return config.mode;
 }
 
-function stubCompute(payload: ComputePayload): SignedResult {
-  const transcriptHash = deriveHash(payload.ciphertexts.join("|"));
-  const tally = payload.ciphertexts.length;
+function ensureSDK() {
+  if (!configured) {
+    initSDK();
+  }
+}
 
-  return {
-    poolId: payload.poolId,
-    tally,
-    transcriptHash,
-    signature: deriveHash(`${transcriptHash}:${verifierSalt}`),
-    issuedAt: Date.now(),
-    attester: process.env.ARXPOOL_ATTESTER_SECRET ? "custom-attester" : "arxpool-local"
-  };
+export function getSDKMode(): "stub" | "testnet" {
+  ensureSDK();
+  return getConfig().mode;
+}
+
+export async function createCollectorPool(input: {
+  id: string;
+  title: string;
+  options: string[];
+}): Promise<Pool> {
+  ensureSDK();
+  return sdkCreatePool({
+    id: input.id,
+    mode: "tally",
+    description: input.title,
+    metadata: { options: input.options }
+  });
+}
+
+export async function joinCollectorPool(poolId: string, blob: EncryptedBlob): Promise<EncryptedBlob> {
+  ensureSDK();
+  return sdkJoinPool(poolId, blob);
+}
+
+export async function computeCollectorPool(poolId: string, options: ComputeOptions = {}): Promise<SignedResult> {
+  ensureSDK();
+  return sdkComputePool(poolId, options);
 }
 
 export function verifyResult(result: SignedResult): boolean {
-  const expected = deriveHash(`${result.transcriptHash}:${verifierSalt}`);
-  return expected === result.signature;
+  return sdkVerifyResult(result);
 }
 
-function deriveHash(input: string): string {
-  let hash = 0;
-  for (let i = 0; i < input.length; i += 1) {
-    hash = (hash * 31 + input.charCodeAt(i)) % 2147483647;
-  }
-  return Math.abs(hash).toString(16).padStart(8, "0");
+export function encryptChoice(choice: string): string {
+  const nonce = randomNonce();
+  const combined = `${nonce}::${choice}`;
+  return encodeBase64(combined);
 }
+
+export function maskedCiphertext(): string {
+  return "[ENCRYPTED_PAYLOAD]";
+}
+
+function randomNonce() {
+  return Math.random().toString(36).slice(2, 10);
+}
+
+function encodeBase64(value: string) {
+  if (typeof window === "undefined") {
+    return Buffer.from(value, "utf8").toString("base64");
+  }
+  return window.btoa(unescape(encodeURIComponent(value)));
+}
+
+export type { SignedResult };

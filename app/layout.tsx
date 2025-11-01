@@ -1,52 +1,48 @@
 import type { Metadata } from "next";
-import { Cabin_Condensed } from "next/font/google";
+import { Inter } from "next/font/google";
 import "../styles/globals.css";
 import { Navbar } from "../components/navbar";
 import { Footer } from "../components/footer";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://arxpool.dev";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://arxpool-web.vercel.app";
 
-const cabinCondensed = Cabin_Condensed({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-sans",
-  display: "swap"
+  display: "swap",
+  variable: "--font-inter"
 });
 
 export const metadata: Metadata = {
-  title: "ArxPool Web Portal",
-  description:
-    "Dark, futuristic portal for developers to explore the ArxPool SDK, docs, and interactive demos.",
-  metadataBase: new URL(baseUrl),
+  title: "ArxPool — Testnet Portal",
+  description: "Landing, docs, demo, and collector API for the ArxPool encrypted pooling toolkit.",
+  metadataBase: new URL(siteUrl),
   icons: {
-    icon: "/favicon.svg"
+    icon: "/favicon.ico"
   },
   openGraph: {
-    title: "ArxPool Web Portal",
-    description:
-      "Dark, futuristic portal for developers to explore the ArxPool SDK, docs, and interactive demos.",
+    title: "ArxPool — Testnet Portal",
+    description: "Landing, docs, demo, and collector API for the ArxPool encrypted pooling toolkit.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "ArxPool Portal Overview"
+        alt: "ArxPool Portal"
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
-    title: "ArxPool Web Portal",
-    description:
-      "Dark, futuristic portal for developers to explore the ArxPool SDK, docs, and interactive demos.",
-    images: ["/og-image.png"]
+    title: "ArxPool — Testnet Portal",
+    description: "Landing, docs, demo, and collector API for the ArxPool encrypted pooling toolkit.",
+    images: ["/og.png"]
   }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark ${cabinCondensed.variable}`}>
-      <body className={`${cabinCondensed.className} min-h-screen bg-background text-foreground`}>
+    <html lang="en" className={`dark ${inter.variable}`}>
+      <body className="min-h-screen bg-background text-foreground" style={{ fontFamily: '"Google Sans", var(--font-inter), "Inter", sans-serif' }}>
         <div className="relative flex min-h-screen flex-col">
           <Navbar />
           <main className="flex-1">{children}</main>

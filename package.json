@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@arxpool-hq/sdk": "0.1.0",
+    "@arxpool-hq/sdk": "file:../arxpool-sdk",
     "@contentlayer/source-files": "0.3.4",
     "@emotion/is-prop-valid": "1.2.1",
     "@radix-ui/react-slot": "1.0.2",

@@ -1,61 +1,63 @@
 # ArxPool Web Portal
 
-Dark, neon-themed Next.js 14 portal that unifies the ArxPool landing page, MDX documentation, interactive demo, and stubbed collector backend.
+Next.js 14 portal featuring the ArxPool landing page, MDX docs, interactive demo, and in-memory collector API. Built for the Arcium encrypted compute ecosystem.
 
-## Features
+## What's inside
 
-- **Landing** with hero, stats, features, and flow diagram.
-- **Docs** sourced from MDX via Contentlayer.
-- **Demo** UI showing create → join → compute → verify loop.
-- **Collector API** implemented with in-memory persistence.
-- **Design system** powered by TailwindCSS, shadcn-style buttons, and Cabin Condensed stack.
+- **Landing** – hero, value prop, how-it-works overview, and mode badge (Stub / Testnet).
+- **Docs** – Contentlayer compiles five MDX guides: intro, install, developer guide, architecture, security.
+- **Demo** – walk through create → join → compute → verify with signature badges.
+- **API** – `/api/pool/create`, `/api/join`, `/api/pool/compute`, `/api/result` backed by an in-memory store.
 
 ## Getting started
 
 ```bash
-pnpm install
+npm install
 cp .env.example .env.local
-pnpm dev
+npm run dev
 ```
 
-Open `http://localhost:3000` and explore the landing page, docs, and `/demo` playground.
+Open `http://localhost:3000` to explore the landing page and try the `/demo` experience.
+
+> **Note**: The project resolves `@arxpool-hq/sdk` from `../arxpool-sdk`. Make sure the sibling repository is present or update the dependency to your published package.
 
 ## Environment variables
 
 | Name | Description |
 | --- | --- |
-| `ARXPOOL_ATTESTER_SECRET` | Local signing secret for stubbed attester metadata. |
-| `ARCIUM_API_KEY` | Optional key when calling the real Arcium network. |
-| `ARXPOOL_MXE_ID` | Optional MXE identifier for live compute. |
-| `USE_STUB` | `true` keeps computation deterministic for demos. |
-| `NEXT_PUBLIC_BASE_URL` | Hostname used by fetch calls and metadata. |
+| `USE_STUB` | `true` runs the demo in deterministic stub mode, `false` targets Arcium testnet. |
+| `ARXPOOL_NODE` | Arcium node RPC endpoint (required for testnet). |
+| `ARXPOOL_ATTESTER_SECRET` | Local signing secret used in stub mode. |
+| `ARXPOOL_ATTESTER_KEY` | Ed25519 attester key for testnet verification. |
+| `NEXT_PUBLIC_SITE_URL` | Public site URL for metadata links. |
+| `NEXT_PUBLIC_USE_STUB` | Mirrors `USE_STUB` for client-side badges. |
 
 ## Scripts
 
-- `pnpm dev` – Next.js dev mode with automatic Contentlayer rebuilds.
-- `pnpm build` – Generates docs then compiles the production bundle.
-- `pnpm start` – Runs the production server (after build).
-- `pnpm lint` – Lints the project.
+- `npm run dev` – start Next.js in development mode.
+- `npm run build` – build for production with Contentlayer pre-compilation.
+- `npm run start` – run the production server.
+- `npm run lint` – lint the project.
 
-## Architecture
+## Project structure
 
 ```
 arxpool-web/
 ├─ app/                 # Landing, docs, demo, API routes
-├─ components/          # Reusable UI primitives (hero, sections, cards)
-├─ content/docs/        # MDX files compiled by Contentlayer
-├─ lib/                 # SDK wrapper, crypto stub, in-memory DB
-├─ public/              # Logo + OG image assets
-├─ styles/              # Tailwind globals
-└─ mdx-components.tsx   # MDX typography overrides
+├─ components/          # Navbar, footer, hero, UI primitives
+├─ content/docs/        # MDX documentation (contentlayer)
+├─ lib/                 # SDK wrapper and in-memory store
+├─ public/              # Logos, favicons, OG images
+└─ styles/              # Tailwind globals
 ```
 
-## Testing plan
+## Demo flow
 
-- API unit coverage via calling `/api/pool/create|join|compute|result` in isolation with stub data.
-- Integration: create pool → join twice → compute → verify (mirrored in the `/demo` UI logic).
-- Visual smoke test: open `/`, `/docs`, `/docs/intro`, `/demo` to ensure Tailwind styles load.
+1. `POST /api/pool/create` seeds an in-memory pool.
+2. `POST /api/join` accepts encrypted choices and redacts them immediately.
+3. `POST /api/pool/compute` calls the SDK wrapper (`stub` or `testnet`).
+4. `GET /api/result` returns the signed payload that the client verifies.
 
 ## Deployment
 
-Deploy to Vercel directly. The repo includes `next.config.mjs`, `.env.example`, and Contentlayer config so the pipeline builds without extra tweaks. Ensure environment secrets only live in the backend scope and keep telemetry disabled as mandated by the PRD guardrails.
+Deploy to Vercel. Add the relevant environment variables, keeping attester secrets on the server only. Stub mode works out of the box; flip `USE_STUB` to join the Arcium testnet without code changes.

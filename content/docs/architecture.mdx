@@ -1,24 +1,17 @@
 ---
-title: System Architecture
-description: Trace how the SDK, collector API, and Arcium MXE coordinate end to end.
+title: Architecture
+description: Trace the encrypted data path from clients to Arcium and back.
 order: 3
 ---
 
 ```
-User → ArxPool SDK (frontend)
-     → Collector API (backend)
-     → Arcium MXE (compute layer)
-     → Job Receipt / Attestation
-     → verifyResult() (client)
+User → ArxPool SDK → Collector API → Arcium Node → verifyResult()
 ```
 
-## Components
+1. **User** encrypts a choice client-side.
+2. **SDK** normalises payloads and signs requests.
+3. **Collector API** stores ciphertext in memory and calls `computePool()`.
+4. **Arcium Node** (stub or testnet) returns an attested result.
+5. **verifyResult()** runs in the browser to confirm the signature and job commit.
 
-- **Client SDK** -- handles encryption, submission, and verification helpers.
-- **Collector API** -- receives ciphertext, triggers computation, and exposes signed receipts.
-- **Arcium MXE** -- executes secure multiparty computation once the project goes live.
-- **Verifier** -- validates attestations plus `job_commit` hashes before acting on results.
-
-## Why it matters
-
-ArxPool abstracts complex encrypted compute into simple functions. Builders can remix the toolkit for private voting, analytics, AI collaborations, or DeFi protocols that require confidential aggregation -- all without reimplementing the cryptography stack.
+The portal keeps this flow fully contained so you can swap environments without rewriting plumbing.
