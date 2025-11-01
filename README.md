@@ -19,7 +19,7 @@ npm run dev
 
 Open `http://localhost:3000` to explore the landing page and try the `/demo` experience.
 
-> **Note**: The project resolves `@arxpool-hq/sdk` from `../arxpool-sdk`. Make sure the sibling repository is present or update the dependency to your published package.
+> **Note**: During development the build prefers `../arxpool-sdk` if it exists (fallback to an internal stub otherwise). Keep the sibling repository checked out and built to try the latest SDK locally.
 
 ## Environment variables
 
