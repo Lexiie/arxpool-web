@@ -246,11 +246,12 @@ export default function DemoPage() {
               </div>
             )}
             {result && (() => {
-              const payload = isRecord(result.payload) ? result.payload : {};
+              const payload = isRecord(result.payload) ? result.payload : null;
               const participantCount = extractParticipantCount(result);
-              const metadata = isRecord(payload.metadata)
-                ? JSON.stringify(payload.metadata, null, 2)
-                : undefined;
+              const metadata =
+                payload && "metadata" in payload && isRecord(payload.metadata)
+                  ? JSON.stringify(payload.metadata, null, 2)
+                  : undefined;
 
               return (
                 <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-white/80">
@@ -260,11 +261,11 @@ export default function DemoPage() {
                       {result.valid ? "VALID" : "INVALID"}
                     </Badge>
                   </div>
-                  <ResultRow label="Pool ID" value={String(payload.pool_id ?? "-")} />
-                  <ResultRow label="Mode" value={String(payload.mode ?? "-")} />
-                  <ResultRow label="Computed at" value={String(payload.computed_at ?? "-")} />
+                  <ResultRow label="Pool ID" value={String(payload?.pool_id ?? "-")} />
+                  <ResultRow label="Mode" value={String(payload?.mode ?? "-")} />
+                  <ResultRow label="Computed at" value={String(payload?.computed_at ?? "-")} />
                   <ResultRow label="Participants" value={String(participantCount ?? "0")} />
-                  <ResultRow label="Ciphertexts digest" value={String(payload.ciphertexts_digest ?? "-")} />
+                  <ResultRow label="Ciphertexts digest" value={String(payload?.ciphertexts_digest ?? "-")} />
                   <ResultRow label="Signer pubkey" value={result.signer_pubkey} />
                   <ResultRow label="Signature" value={result.signature} />
                   {metadata && (
