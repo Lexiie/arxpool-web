@@ -246,12 +246,9 @@ export default function DemoPage() {
               </div>
             )}
             {result && (() => {
-              const payload = isRecord(result.payload) ? result.payload : null;
+              const payload = extractResultPayload(result);
               const participantCount = extractParticipantCount(result);
-              const metadata =
-                payload && "metadata" in payload && isRecord(payload.metadata)
-                  ? JSON.stringify(payload.metadata, null, 2)
-                  : undefined;
+              const metadata = formatMetadata(payload);
 
               return (
                 <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-white/80">
@@ -286,10 +283,25 @@ export default function DemoPage() {
   );
 }
 
+function extractResultPayload(result: SignedResult): Record<string, unknown> | null {
+  return isRecord(result.payload) ? (result.payload as Record<string, unknown>) : null;
+}
+
+function formatMetadata(payload: Record<string, unknown> | null): string | undefined {
+  if (!payload || !("metadata" in payload)) {
+    return undefined;
+  }
+  const metadata = (payload as { metadata?: unknown }).metadata;
+  if (!isRecord(metadata)) {
+    return undefined;
+  }
+  return JSON.stringify(metadata, null, 2);
+}
+
 function extractParticipantCount(result: SignedResult): number | undefined {
-  const payload = result.payload;
-  if (payload && typeof payload === "object" && "participant_count" in payload) {
-    const value = (payload as Record<string, unknown>).participant_count;
+  const payload = extractResultPayload(result);
+  if (payload && "participant_count" in payload) {
+    const value = (payload as { participant_count?: unknown }).participant_count;
     if (typeof value === "number") return value;
     if (typeof value === "string") {
       const parsed = Number(value);
